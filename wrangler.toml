@@ -1,0 +1,4 @@
+name = "self-japanized-manual"
+pages_build_output_dir = "./dist"
+compatibility_date = "2025-01-09"
+compatibility_flags = ["nodejs_compat"]
