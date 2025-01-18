@@ -4,6 +4,7 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://self-japanized-manual.buntin.dev',
   integrations: [
     starlight({
       title: 'Self-Japanized-Manual',

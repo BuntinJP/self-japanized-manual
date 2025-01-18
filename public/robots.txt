@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://self-japanized-manual.buntin.dev/sitemap-index.xml
