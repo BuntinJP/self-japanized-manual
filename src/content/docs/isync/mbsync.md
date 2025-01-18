@@ -3,6 +3,10 @@ title: mbsync
 description: A reference page in my new Starlight docs site.
 ---
 
+```
+翻訳元:https://isync.sourceforge.io/mbsync.html
+```
+
 <style type="text/css">
        p       { margin-top: 0; margin-bottom: 0; vertical-align: top }
        pre     { margin-top: 0; margin-bottom: 0; vertical-align: top }
@@ -91,16 +95,10 @@ mbsync</b> --list-stores [<i>options</i> ...] [<i>store</i>
 <p style="margin-left:18%;">構成ファイルにある <b>Expunge</b> オプションを上書きします。詳細は下記を参照してください。</p>
 
 
-<p style="margin-left:9%;">{<b>-n</b>|<b>-o</b>|<b>-u</b>|<b>-g</b>|<b>-f</b>|<b>-0</b>|<b>-F</b>},
-<br>
-
-{<b>--new</b>|<b>--old</b>|<b>--upgrade</b>|<b>--gone</b>|<b>--flags</b>|<b>--noop</b>|<b>--full</b>}
-<br>
-
-{<b>-L</b>|<b>-H</b>}[<b>n</b>][<b>o</b>][<b>u</b>][<b>g</b>][<b>f</b>],
-<br>
-
-{<b>--pull</b>|<b>--push</b>}[<b>-new</b>|<b>-old</b>|<b>-upgrade</b>|<b>-gone</b>|<b>-flags</b>]</p>
+<p style="margin-left:9%;">{<b>-n</b>|<b>-o</b>|<b>-u</b>|<b>-g</b>|<b>-f</b>|<b>-0</b>|<b>-F</b>},</p>
+<p style="margin-left:9%;">{<b>--new</b>|<b>--old</b>|<b>--upgrade</b>|<b>--gone</b>|<b>--flags</b>|<b>--noop</b>|<b>--full</b>}</p>
+<p style="margin-left:9%;">{<b>-L</b>|<b>-H</b>}[<b>n</b>][<b>o</b>][<b>u</b>][<b>g</b>][<b>f</b>],</p>
+<p style="margin-left:9%;">{<b>--pull</b>|<b>--push</b>}[<b>-new</b>|<b>-old</b>|<b>-upgrade</b>|<b>-gone</b>|<b>-flags</b>]</p></p>
 
 <p style="margin-left:18%;">構成ファイルにある <b>Sync</b> オプションを上書きします。詳細は下記を参照してください。</p>
 
