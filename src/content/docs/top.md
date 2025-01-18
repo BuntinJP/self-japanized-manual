@@ -9,5 +9,6 @@ description: 自分で翻訳(ChatGPT)したマニュアルのまとめです。
 ├── top
 └── isync
     ├── overview
-    └── mbsync
+    ├── mbsync
+    └── mbsyncrc.sample
 ```

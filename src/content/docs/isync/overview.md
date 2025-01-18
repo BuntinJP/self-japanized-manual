@@ -8,3 +8,4 @@ sidebar:
 ## 目次
 
 1. [mbsync](/isync/mbsync/)
+2. [mbsyncrc.sample](/isync/mbsyncrcsample/)
