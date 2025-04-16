@@ -9,7 +9,7 @@ export default defineConfig({
     starlight({
       title: 'Self-Japanized-Manual',
       social: {
-        github: 'https://github.com/BuntinJP',
+        github: 'https://github.com/BuntinJP/self-japanized-manual',
       },
       customCss: [
         './src/styles/custom.css',
@@ -22,6 +22,10 @@ export default defineConfig({
         {
           label: 'isync(mbsync)',
           autogenerate: { directory: 'isync' },
+        },
+        {
+          label: 'Glance',
+          autogenerate: { directory: 'glance' },
         },
       ],
     }),
