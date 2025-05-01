@@ -51,7 +51,7 @@ description: Configuring Glance
 
 
 ## 事前設定されたページ
-すべての利用可能な設定オプションを読む時間を費やしたくなく、すぐに始めるための何かが欲しい場合は、[この`glance.yml`ファイル](glance.yml)を使用して、必要に応じて変更を加えることができます。これにより、以下のようなページが表示されます：
+すべての利用可能な設定オプションを読む時間を費やしたくなく、すぐに始めるための何かが欲しい場合は、[この`glance.yml`ファイル](/glance/glance.yml)を使用して、必要に応じて変更を加えることができます。これにより、以下のようなページが表示されます：
 
 ![](https://raw.githubusercontent.com/glanceapp/glance/refs/heads/main/docs/images/preconfigured-page-preview.png)
 
@@ -284,7 +284,7 @@ theme:
 ```
 
 ### 利用可能なテーマ
-独自のテーマを設定する時間を費やしたくない場合は、[いくつかの利用可能なテーマ](themes.md)があり、その値を単にコピーできます。
+独自のテーマを設定する時間を費やしたくない場合は、[いくつかの利用可能なテーマ(※github)](https://github.com/glanceapp/glance/blob/main/docs/themes.md)があり、その値を単にコピーできます。
 
 ### プロパティ
 | 名前 | 型 | 必須 | デフォルト |
