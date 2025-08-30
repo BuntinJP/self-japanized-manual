@@ -1,9 +1,9 @@
 ---
-title: 自作日本語マニュアルTOP
-description: 自分で翻訳(ChatGPT)したマニュアルのまとめです。
+title: MANUAL TOP
+description: MANUAL TOP
 ---
 
-## 自作日本語マニュアルTOP
+## MANUAL TOP
 
 ```
 ├── top
