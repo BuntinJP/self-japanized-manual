@@ -1,5 +1,5 @@
 ---
-title: isync HOME
+title: HOME
 description: isync(mbsync)マニュアル
 sidebar:
   order: 1

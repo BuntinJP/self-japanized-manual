@@ -1,75 +1,94 @@
-# Debugging MEGAcmd
+---
+title: DEBUG
+description: MEGAcmd のデバッグ
+sidebar:
+  order: 6
+---
 
-There are two different kinds of logging messages:
-- MEGAcmd: these messages are reported by MEGAcmd itself. These messages will show information regarding the processing of user commands. They will be labeled with `cmd`.
+> 翻訳元:https://github.com/meganz/MEGAcmd/blob/master/contrib/docs/DEBUG.md
 
-- SDK: these messages are reported by the sdk and its dependent libraries. These messages will show information regarding requests, transfers, network, etc. They will be labeled with `sdk`.
+# MEGAcmd のデバッグ
 
-The MEGAcmd server logs messages depending on the level of log adjusted to those two categories. You can adjust the level of logging for those kinds with `log` command. Log levels range from FATAL (the lowest) to VERBOSE (the highest). The log level of each message is displayed after the cmd/sdk prefix.
+ログメッセージには 2 種類あります：
 
-Here's an example of some random log messages:
+- MEGAcmd: これらのメッセージは MEGAcmd 自体から報告されます。ユーザーコマンドの処理に関する情報が表示されます。`cmd`というラベルが付けられます。
+
+- SDK: これらのメッセージは SDK およびその依存ライブラリから報告されます。リクエスト、転送、ネットワークなどに関する情報が表示されます。`sdk`というラベルが付けられます。
+
+MEGAcmd サーバーは、これら 2 つのカテゴリに対して設定されたログレベルに応じてメッセージを記録します。ログレベルは`log`コマンドで調整可能です。ログレベルは FATAL（最低）から VERBOSE（最高）まであります。各メッセージのログレベルは cmd/sdk のプレフィックスの後に表示されます。
+
+以下はランダムなログメッセージの例です：
+
 ```
 2025-02-07_16-47-56.662269 cmd DBG  Registering state listener petition with socket: 85 [comunicationsmanagerfilesockets.cpp:189]
 2025-02-07_16-47-56.662366 cmd DTL  Unregistering no longer listening client. Original petition: registerstatelistener [comunicationsmanagerfilesockets.cpp:346]
 2025-02-07_16-47-56.662671 sdk INFO Request (RETRY_PENDING_CONNECTIONS) starting [megaapi_impl.cpp:16964]
 ```
-The source file and line the message was logged from is appended at the end of the log message, to help developers quickly find out where they came from.
 
+メッセージが記録されたソースファイルと行番号がログメッセージの最後に付加されており、開発者がどこから来たのかを素早く特定できるようになっています。
 
-## How to access the logs
+## ログへのアクセス方法
 
-Logs coming from MEGAcmd are written to the `megacmdserver.log` file. This file is not removed across restarts, so when it gets too large it is automatically compressed and renamed to include a timestamp (without stopping the logging).
+MEGAcmd からのログは`megacmdserver.log`ファイルに書き込まれます。このファイルは再起動を跨いでも削除されず、サイズが大きくなると自動的に圧縮されタイムスタンプ付きで名前が変更されます（ログ記録は停止しません）。
 
-The log file is located in `$HOME/.megaCmd` for Linux and macOS, and `%LOCALAPPDATA%\MEGAcmd\.megaCmd` for Windows.
+ログファイルは Linux および macOS では`$HOME/.megaCmd`、Windows では`%LOCALAPPDATA%\MEGAcmd\.megaCmd`にあります。
 
-## Verbosity on startup
+## 起動時の詳細度設定
 
-You can start the server with higher level of verbosity in order to have log levels increased at startup, regardless of the log level configured by the `log` command mentioned above.
-You will need to pass `--debug-full` as an argument to the executable (e.g: `MEGAcmdServer.exe --debug-full`). Alternatively, you can set the `MEGACMD_LOGLEVEL` environment variable to `FULLVERBOSE` before starting the server.
+サーバー起動時により高い詳細度でログレベルを設定したい場合は、実行ファイルに`--debug-full`引数を渡します（例：`MEGAcmdServer.exe --debug-full`）。または、サーバー起動前に環境変数`MEGACMD_LOGLEVEL`を`FULLVERBOSE`に設定することも可能です。
 
-If you want other startup level of logging, you can use the following:
-* `--debug` or `MEGACMD_LOGLEVEL=DEBUG` will set
-    ```
-    MEGAcmd log level = DEBUG
-    SDK log level = DEFAULT
-    ```
+他の起動時ログレベルは以下の通りです：
 
-* `--debug-full` or `MEGACMD_LOGLEVEL=DEBUG` will set
-    ```
-    MEGAcmd log level = DEBUG
-    SDK log level = DEBUG
-    ```
+- `--debug` または `MEGACMD_LOGLEVEL=DEBUG` は以下を設定します：
 
-* `--verbose` or `MEGACMD_LOGLEVEL=VERBOSE` will set
-    ```
-    MEGAcmd log level = VERBOSE
-    SDK log level = DEFAULT
-    ```
+  ```
+  MEGAcmdのログレベル = DEBUG
+  SDKのログレベル = DEFAULT
+  ```
 
-* `--verbose-full` or `MEGACMD_LOGLEVEL=FULLVERBOSE` will set
-    ```
-    MEGAcmd log level = VERBOSE
-    SDK log level = VERBOSE
-    ```
+- `--debug-full` または `MEGACMD_LOGLEVEL=DEBUG` は以下を設定します：
 
-## Controlling verbosity of a single command
-In general, as we've mentioned before, lower verbosity log messages are not printed directly to the console. Only errors are. You can pass `-v`, `-vv`, and `-vvv` when running a command to ensure warning, debug, and verbose messages are printed (respectively). Note that this is only for the console; log level of `megacmdserver.log` will follow the rules explained above.
+  ```
+  MEGAcmdのログレベル = DEBUG
+  SDKのログレベル = DEBUG
+  ```
 
-## JSON logs
-When the log level of the SDK is `VERBOSE`, the entire JSON payload of the HTTP requests sent and received from the API will be logged. This takes up a bit more space but provides more valuable info. Full JSON logging can be overwritten independently by setting the environment variable `MEGACMD_JSON_LOGS` to `0` or `1`.
+- `--verbose` または `MEGACMD_LOGLEVEL=VERBOSE` は以下を設定します：
 
-## Configuring the Rotating Logger
-The MEGAcmd logger rotates and compresses log files to avoid taking up too much space. Some of its values can be configured to fit the needs of specific systems. These are:
-* `RotationType`: The type of rotation to use. Possible values are _Timestamp_ and _Numbered_. Defaults to _Timestamp_.
-    * Numbered rotation will add a "file number" suffix when rotating files, keeping track of the total number and removing them if there are more than `MaxFilesToKeep`.
-    * Timestamp rotation will keep track of the total number (similarly to above), while also keeping track of the creation date of files, removing them if they're older than `MaxFileAge`.
-* `CompressionType`: The type of compression to use. Possible values are _Gzip_ and _None_ (which disables compression). Defaults to _Gzip_.
-* `MaxFileMB`: The maximum size the `megacmdserver.log` file can be, in megabytes. If it gets over this size, it'll be renamed and compressed according to the rules stated above. Default is usually 50 MB, but will be less for disks with limited space.
-* `MaxFilesToKeep`: The maximum amount of rotated files allowed. When the total file count exceeds this value, older files will be removed. Default depends on `MaxFileMB`, the compression used, and the system specs.
-* `MaxFileAgeSeconds`: The maximum age the rotated files can be before being deleted, in seconds. Defaults to 1 month. _Note_: Only used by timestamp-based rotation.
-* `MaxMessageBusMB`: The maximum memory allowed by the logger's internal bus, in megabytes. Defaults to 512 MB. In most cases, the logger will use way less RAM; it is recommended to check memory usage before changing this value.
+  ```
+  MEGAcmdのログレベル = VERBOSE
+  SDKのログレベル = DEFAULT
+  ```
 
-To configure them we must manually edit the `megacmd.cfg` file. This file must be present in the same directory as the `megacmdserver.log` file; if not, we can manually create it. The following is an example of the syntax of this file:
+- `--verbose-full` または `MEGACMD_LOGLEVEL=FULLVERBOSE` は以下を設定します：
+  ```
+  MEGAcmdのログレベル = VERBOSE
+  SDKのログレベル = VERBOSE
+  ```
+
+## 単一コマンドの詳細度制御
+
+一般的に、低い詳細度のログメッセージはコンソールには直接表示されません。エラーのみが表示されます。コマンド実行時に`-v`、`-vv`、`-vvv`を渡すことで、それぞれ警告、デバッグ、詳細メッセージをコンソールに表示させることができます。これはあくまでコンソール用であり、`megacmdserver.log`のログレベルは上記のルールに従います。
+
+## JSON ログ
+
+SDK のログレベルが`VERBOSE`の場合、API に送受信される HTTP リクエストの全 JSON ペイロードがログに記録されます。これによりログサイズは増えますが、より詳細な情報が得られます。JSON ログの有効・無効は環境変数`MEGACMD_JSON_LOGS`を`0`または`1`に設定することで独立して制御可能です。
+
+## ローテーティングロガーの設定
+
+MEGAcmd のロガーはログファイルが大きくなりすぎないようにローテーションと圧縮を行います。以下の設定項目を調整して特定のシステムに合わせることができます：
+
+- `RotationType`: ローテーションの種類。設定可能な値は*Timestamp*と*Numbered*です。デフォルトは*Timestamp*です。
+  - Numbered ローテーションはファイル名に番号を付けてローテーションし、`MaxFilesToKeep`を超えると古いファイルを削除します。
+  - Timestamp ローテーションはファイルの作成日時を管理し、`MaxFileAge`を超えたファイルを削除します。
+- `CompressionType`: 圧縮の種類。設定可能な値は*Gzip*と*None*（圧縮なし）です。デフォルトは*Gzip*です。
+- `MaxFileMB`: `megacmdserver.log`ファイルの最大サイズ（MB 単位）。これを超えるとファイルはリネーム・圧縮されます。通常は 50MB ですが、ディスク容量に応じて小さくなることがあります。
+- `MaxFilesToKeep`: ローテーションされたファイルの最大保持数。これを超えると古いファイルが削除されます。デフォルト値は`MaxFileMB`や圧縮設定、システムスペックによります。
+- `MaxFileAgeSeconds`: ローテーションされたファイルの最大保持期間（秒単位）。デフォルトは約 1 ヶ月です。_注_: Timestamp ローテーションでのみ使用されます。
+- `MaxMessageBusMB`: ロガー内部のメモリバスの最大容量（MB 単位）。デフォルトは 512MB です。多くの場合はこれより少ない RAM を使用します。変更する場合はメモリ使用量を確認することを推奨します。
+
+これらの設定は`megacmd.cfg`ファイルを手動で編集して行います。このファイルは`megacmdserver.log`と同じディレクトリに配置する必要があります。存在しない場合は手動で作成してください。ファイルの書式例は以下の通りです：
+
 ```
 RotatingLogger:RotationType=Timestamp
 RotatingLogger:CompressionType=None
@@ -78,8 +97,9 @@ RotatingLogger:MaxFilesToKeep=20
 RotatingLogger:MaxFileAgeSeconds=3600
 RotatingLogger:MaxMessageBusMB=64.0
 ```
-Values not present in it will be set to their default. Invalid values (such as negative sizes) will be silently discarded. Note that this configuration is only loaded at the start, so the MEGAcmd server must be restarted after adding or changing any of the values.
 
-Configuring the Rotating Logger might result in previous log files not being rotated or deleted properly. It is recommended to delete them manually (or moving them somewhere else, if we want to preserve them) before changing the configuration.
+未記載の値はデフォルトが適用されます。負の値など無効な値は無視されます。この設定は起動時にのみ読み込まれるため、設定変更後は MEGAcmd サーバーの再起動が必要です。
 
+ローテーティングロガーの設定変更により、過去のログファイルが正しくローテーションまたは削除されなくなる可能性があります。設定変更前に古いログファイルを手動で削除するか、保存したい場合は別場所へ移動することを推奨します。
 
+</file>

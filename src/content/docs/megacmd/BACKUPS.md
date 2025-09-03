@@ -1,19 +1,30 @@
-# MEGA-BACKUPS - Backing up folders with MEGAcmd
-This is a brief tutorial on how to configure backups.
+---
+title: BACKUP
+description: MEGAcmdを使ったフォルダのバックアップ
+sidebar:
+  order: 3
+---
 
-Notice: the commands listed here assume you are using the interactive interaction mode: they are supposed to be executed within MEGAcmdShell.
+> 翻訳元:https://github.com/meganz/MEGAcmd/blob/master/contrib/docs/BACKUPS.md
 
-## Creation
-Example: 
-backup /path/mega/folder /remote/path --period="0 0 4 * * *" --num-backups=10
+# MEGA-BACKUPS - MEGAcmd を使ったフォルダのバックアップ
 
-This will configure a backup of "myfolder" into /remote/path that will be carried out
- at 4:00 A.M. (UTC) every day. It will store the last 10 copies. 
- Notice a first backup will be carried out immediately.
- In this example we are using cron-time expresions. 
- You can find extra info on those using "backup --help".
- 
-Backups will be stored as:
+これはバックアップの設定方法に関する簡単なチュートリアルです。
+
+注意：ここに記載されているコマンドは対話モードでの使用を前提としています。MEGAcmdShell 内で実行してください。
+
+## 作成
+
+例:
+backup /path/mega/folder /remote/path --period="0 0 4 \* \* \*" --num-backups=10
+
+これは「myfolder」を/remote/path にバックアップする設定で、毎日午前 4 時（UTC）に実行されます。最後の 10 個のコピーを保存します。  
+最初のバックアップは即座に実行されます。  
+この例では cron 形式の時間指定を使用しています。  
+詳しくは「backup --help」を参照してください。
+
+バックアップは以下のように保存されます：
+
 ```
  /remote/path/myfolder_bk_TIME1
  /remote/path/myfolder_bk_TIME2
@@ -21,22 +32,21 @@ Backups will be stored as:
  ...
 ```
 
-## Listing 
+## 一覧表示
 
-You can list the backups configured typing `backup`:
+設定されているバックアップは`backup`と入力することで一覧表示できます：
 
 ```
 TAG   LOCALPATH                 REMOTEPARENTPATH                  STATUS
 4     /path/mega/folder            /remote/path                   ACTIVE
 ```
 
-Notice the TAG. You can use it to refer to the backup if you wan to change its configuration 
-or delete/abort it.
+TAG に注目してください。バックアップの設定変更や削除/中止の際にこの TAG を指定できます。
 
-### Extra info
+### 追加情報
 
-If you type "backup -l" you will see extra information concerning the backup. Here, you will 
-see when the next backup is scheduled for:
+"backup -l"と入力するとバックアップの詳細情報が表示されます。ここでは次回のバックアップ予定日時が確認できます：
+
 ```
 TAG   LOCALPATH                 REMOTEPARENTPATH                  STATUS
 4     /path/mega/folder            /remote/path                  ONGOING
@@ -49,11 +59,11 @@ TAG   LOCALPATH                 REMOTEPARENTPATH                  STATUS
 
 ```
 
-Also, you can see the progress of the current backup 
-(or the last one is there is no backup being performed a the moment)
+また、現在進行中のバックアップ（または進行中でなければ最後のバックアップ）の進行状況も確認できます。
 
-### Backup history:
-With "backup -h" you will be able to see the existing backups with their state and start time:
+### バックアップ履歴：
+
+"backup -h"を使うと、既存のバックアップの状態や開始時間を確認できます：
 
 ```
 TAG   LOCALPATH                 REMOTEPARENTPATH                  STATUS
@@ -66,39 +76,47 @@ TAG   LOCALPATH                 REMOTEPARENTPATH                  STATUS
   myfolder_bk_20180118182911       18Jan2018 18:29:11     ONGOING     23      10
 ```
 
-Tip: If you are using linux/mac you can monitor the status actively in non-interactive mode with:
+ヒント：Linux や Mac を使っている場合、非対話モードで状態をリアルタイムに監視するには以下を使います：
+
 ```
 watch mega-backup -lh
 ```
 
-# Control:
+# 操作：
 
-## Abort
+## 中止
 
-You can abort an ONGOING backup using its tag or it's local path. e.g.:
+進行中のバックアップはタグまたはローカルパスで中止できます。例：
+
 ```
 backup -a 4
 ```
-This will cancel all transfers and set the backup as ABORTED
 
-## Delete
+これによりすべての転送がキャンセルされ、バックアップは中止状態になります。
 
-Similarly you can remove a backup, to no longer backup that folder with:
+## 削除
+
+同様に、バックアップ設定を削除してそのフォルダのバックアップを停止できます：
+
 ```
 backup -d /path/mega/folder
-``` 
-This will not remove the existing backups wich will be available in MEGA.
+```
 
-## Change configuration
+既存のバックアップファイルは削除されず、MEGA 上に残ります。
 
-Similarly you can change the period or the number of backups to keep with:
+## 設定変更
+
+バックアップの周期や保持するバックアップ数は以下のように変更できます：
+
 ```
 backup 4 --period=2h
 ```
-This will set our backup with TAG=4 to have a period of 2 hours.
+
+TAG=4 のバックアップの周期を 2 時間に設定します。
+
 ```
 backup /path/mega/folder --num-backups=1
 ```
-This will configure the backup to only keep one instance. 
-Notice that in order not to lose data, older instances will not be deleted until
-the max number of backups is passed.
+
+バックアップの保持数を 1 つに設定します。  
+データ損失を防ぐため、最大保存数を超えるまで古いバックアップは削除されません。

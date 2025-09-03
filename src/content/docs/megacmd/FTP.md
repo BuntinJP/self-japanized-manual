@@ -1,144 +1,156 @@
-# MEGA-FTP - Serve you files as a FTP server with MEGAcmd
-This is a brief tutorial on how to configure [ftp](https://en.wikipedia.org/wiki/File_Transfer_Protocol) server.
+---
+title: FTP
+description: MEGAcmd を使って FTP サーバーを設定する方法。
+sidebar:
+  order: 2
+---
 
-Configuring a FTP server will let you access your MEGA files as if they were located in your computer.
-All major platforms support access to FTP server. See [`Platform`](#platforms) usage.
+> 翻訳元:https://github.com/meganz/MEGAcmd/blob/master/contrib/docs/FTP.md
 
-Notice: the commands listed here assume you are using the interactive interaction mode: they are supposed to be executed within MEGAcmdShell.
+# MEGA-FTP - MEGAcmd でファイルを FTP サーバーとして公開する
 
-## Serving a folder
-Example: 
+これは [ftp](https://en.wikipedia.org/wiki/File_Transfer_Protocol) サーバーを設定する方法についての簡単なチュートリアルです。
+
+FTP サーバーを設定すると、MEGA のファイルを自分のパソコン上にあるかのようにアクセスできます。
+主要なすべてのプラットフォームで FTP サーバーへのアクセスがサポートされています。[プラットフォーム](#platforms)ごとの使い方を参照してください。
+
+注意: ここに記載されているコマンドは対話モード（MEGAcmdShell 内）で実行することを想定しています。
+
+## フォルダを公開する
+
+例:
+
 ```
 ftp /path/mega/folder
 ```
 
-This will configure a FTP server that will serve "myfolder". It'll show you the URL to access that path. You just use that location to configure access [according to your specific OS](#platforms).
-Once you have it configured, you can browse, edit, copy and delete your files using your favourite FTP client or add mount the network location and browse your files as if they were local file in your computer.. 
-Caveat: They are not local, MEGAcmd transparently download/upload decrypt/encrypt those files. 
-Hence, throughput will be decreased as compared to accessing to local files. Be patient.
+このコマンドで "myfolder" を公開する FTP サーバーが設定されます。アクセス用の URL が表示されますので、その URL を[ご利用の OS に応じて](#platforms)設定してください。
+設定が完了すれば、お好みの FTP クライアントでファイルの閲覧・編集・コピー・削除ができたり、ネットワークロケーションとしてマウントしてローカルファイルのように操作できます。
+注意: ファイルはローカルに存在するわけではなく、MEGAcmd が透過的にダウンロード/アップロード・復号/暗号化を行います。
+そのため、ローカルファイルへのアクセスと比べて転送速度は低下します。ご注意ください。
 
-## Streaming
-You can "ftp" a file, so as to offer streaming access to it:
+## ストリーミング
+
+ファイルを "ftp" することで、ストリーミングアクセスを提供できます:
+
 ```
 ftp /path/to/myfile.mp4
 ```
 
-You will receive an URL that you can use in your preferred video player.
+お好みの動画プレイヤーで使用できる URL が表示されます。
 
-## Issues
-We have detected some issues with different software, when trying to save a file into a ftp served locations. Typically with software that creates temporary files. 
-We will keep on trying to circumvent those. 
+## 問題点
 
-In FileZilla, default 20 seconds timeout (Edit -> Preferences -> Connection) will likely stop uploads before they are completed: once a upload is started, it begins to populate a temporary file. Once completed, the actual upload begins (the file gets transfered to MEGA), but no extra traffic is perceived by FileZilla during this time. If the upload takes longer than 20 seconds, it times out. You might want to increase that number for a correct behaviour.
+さまざまなソフトウェアで、FTP で公開した場所にファイルを保存しようとすると問題が発生することがあります。特に一時ファイルを作成するソフトで顕著です。
+今後もこれらの問題の回避策を検討していきます。
 
-In Linux, using gvfsd-dav (Gnome's default ftp client), we have seen problems when trying to reproduce videos within an FTP served location. Recommended alternative: Use VLC. Open it, and drag & drop the file into VLC window. This will open the FTP URL and start streaming you video.
+FileZilla では、デフォルトの 20 秒タイムアウト（編集 → 設定 → 接続）が原因でアップロードが完了前に停止することがあります。アップロード開始時に一時ファイルが作成され、完了後に本当のアップロード（MEGA への転送）が始まりますが、この間 FileZilla からは追加の通信が検出されません。アップロードに 20 秒以上かかるとタイムアウトします。正しく動作させるにはこの値を増やしてください。
 
-If you find any more issues, don't hesitate to write to support@mega.nz, explaining what the problem is and how to reproduce it.
+Linux で gvfsd-dav（Gnome 標準の FTP クライアント）を使う場合、FTP 公開場所内の動画再生で問題が発生することがあります。おすすめの代替手段は VLC です。VLC を開いてファイルをウィンドウにドラッグ＆ドロップしてください。FTP URL が開かれ、動画のストリーミングが始まります。
 
-## Listing 
+他にも問題を見つけた場合は、support@mega.nz まで問題の内容と再現手順を添えてご連絡ください。
 
-You can list the ftp served locations typing `ftp`:
+## 公開中の場所の一覧
+
+`ftp` と入力することで、現在 FTP で公開中の場所を一覧表示できます:
 
 ```
-FTP SERVED LOCATIONS:                                                        
+FTP SERVED LOCATIONS:
 /path/mega/folder: ftp://127.0.0.1:4990/XXXXXXX/myfolder
 /path/to/myfile.mp4: ftp://127.0.0.1:4990/YYYYYYY/myfile.mp4
 ```
 
-These locations will be available as long as MEGAcmd is running. The configuration is persisted, and will be restored every time you restart MEGAcmd
+これらの場所は MEGAcmd が起動している間利用可能です。設定は保存されており、MEGAcmd を再起動すると自動で復元されます。
 
-# Additional features/configurations
+# 追加機能・設定
 
-## Port & public server
+## ポート番号と公開サーバー
 
-When you serve your first location, a FTP server is configured in port `4990`. 
-You can change the port passing `--port=PORT` to your ftp command.
-Currently *only passive mode* is available. If your client does not work with passive FTP mode, it won't work.
-Data connections will work in the range of ports 1500 to 1600 by default. You can change those passing `--data-port=BEGIN-END`
-By default, the server is only accessible from the local machine. 
-You can pass `--public` to your ftp command so as to allow remote access. 
-In that case, use the IP of your server to access to it.
+最初の場所を公開すると、ポート `4990` で FTP サーバーが設定されます。
+ポート番号は `--port=PORT` オプションで変更できます。
+現在、*パッシブモードのみ*サポートされています。クライアントがパッシブ FTP モードに対応していない場合は利用できません。
+データ接続はデフォルトで 1500 ～ 1600 番ポート範囲で動作します。`--data-port=BEGIN-END` で変更可能です。
+デフォルトでは、サーバーはローカルマシンからのみアクセス可能です。
+リモートアクセスを許可するには `--public` オプションを付けてください。
+その場合はサーバーの IP アドレスを使ってアクセスしてください。
 
 ## FTPS
 
-Files in MEGA are encrypted, but you should bear in mind that the bare FTP server offers your files unencrypted. \
-If you wish to add authenticity to your ftp server and integrity & privacy of the data transfered to/from the clients, 
-you can secure it with [TLS](https://wikipedia.org/wiki/Transport_Layer_Security). Notice that FTPs is not the same as [SFTP](https://es.wikipedia.org/wiki/SSH_File_Transfer_Protocol), which is a complete different yet unsupported protocol.
+MEGA 上のファイルは暗号化されていますが、FTP サーバー自体はファイルを暗号化せずに提供します。\
+FTP サーバーに認証やデータ転送の機密性・完全性を追加したい場合は、[TLS](https://wikipedia.org/wiki/Transport_Layer_Security) で保護できます。なお、FTPS は [SFTP](https://es.wikipedia.org/wiki/SSH_File_Transfer_Protocol) とは異なり、SFTP はサポートされていません。
 
-To serve via FTPS, you just need to pass `--tls` and the paths* to your certificate and key files (in PEM format):
+FTPS で公開するには、`--tls` と証明書・鍵ファイル（PEM 形式）のパスを指定してください:
 
 ```
 ftp /path/mega/folder --tls --certificate=/path/to/certificate.pem --key=/path/to/certificate.key
 ```
 
-*Those paths are local paths in your machine, not in MEGA.
+※これらのパスは MEGA 上ではなくローカルマシン上のパスです。
 
-Currently, MEGAcmd only supports one server: although you can serve different locations, only one configuration is possible. 
-The configuration used will be the one on your first served location. 
-If you want to change that configuration you will need to stop serving each and every path and start over.
+現在、MEGAcmd ではサーバー構成は 1 つのみサポートされています。複数の場所を公開できますが、設定は最初の公開場所のものが適用されます。
+設定を変更したい場合は、すべての公開を停止してから再度公開し直してください。
 
+## 公開の停止
 
-## Stop serving
+MEGA の公開場所を停止するには以下のコマンドを実行します:
 
-You can stop serving a MEGA location with:
 ```
 ftp -d /path/mega/folder
 ```
-If successfully, it will show a message indicating that the path is no longer served:
+
+成功すると、以下のようなメッセージが表示されます:
+
 ```
 /path/mega/folder no longer served via ftp
 ```
 
-## Platforms
+## プラットフォーム別手順
 
-All major platforms support accessing/mounting a ftp location. Here are some instructions to do that in Windows, Linux & Mac.
+主要なすべてのプラットフォームで FTP ロケーションへのアクセスやマウントが可能です。ここでは Windows、Linux、Mac での手順を紹介します。
 
 ### Windows
 
-This instructions refer to Windows 10, but they are similar in other windows.
+ここでは Windows 10 の例を示しますが、他のバージョンでも同様です。
 
-Open an Explorer window, and then do right click on "This PC", and then "Add a network location...".
+エクスプローラーを開き、「PC」を右クリックして「ネットワークの場所を追加...」を選択します。
 
-![ftpMenuWin.png](public/assets/mega-cmd/ftpMenuWin.png?raw=true "ftpMenuWin.png")
+![ftpMenuWin.png](public/assets/mega-cmd/ftpMenuWin.png?raw=true 'ftpMenuWin.png')
 
-Then enter the URL MEGAcmd gave you
+MEGAcmd が表示した URL を入力します。
 
-![ftpConnectToServerWin.png](public/assets/mega-cmd/ftpConnectToServerWin.png?raw=true "ftpConnectToServerWin.png")
+![ftpConnectToServerWin.png](public/assets/mega-cmd/ftpConnectToServerWin.png?raw=true 'ftpConnectToServerWin.png')
 
-And select "Log on Anonymously"
+「匿名でログオンする」を選択します。
 
-![ftpConnectToServerWin2.png](public/assets/mega-cmd/ftpConnectToServerWin2.png?raw=true "ftpConnectToServerWin2.png")
+![ftpConnectToServerWin2.png](public/assets/mega-cmd/ftpConnectToServerWin2.png?raw=true 'ftpConnectToServerWin2.png')
 
-Then, you should see the new location in the navigation panel now. 
-Windows FTP client does not allow writing, if you wish to modify your files you should either use an alternative client 
-(like FileZilla), or perhaps serve your files using WEBDAV instead of FTP.
-
+新しい場所がナビゲーションパネルに表示されるはずです。
+Windows 標準の FTP クライアントでは書き込みができません。ファイルを編集したい場合は他のクライアント（FileZilla など）を使うか、FTP ではなく WEBDAV で公開してください。
 
 ### Mac
 
-Open Find and in the Menu "Go", select "Connect to Server", or type **&#x2318; - k**:
+Finder を開き、メニューの「移動」から「サーバへ接続」を選択するか、**&#x2318; - k** を押します。
 
-![webdavMenuMac.png](public/assets/mega-cmd/webdavMenuMac.png?raw=true "webdavMenuMac.png")
+![webdavMenuMac.png](public/assets/mega-cmd/webdavMenuMac.png?raw=true 'webdavMenuMac.png')
 
-Then enter the URL MEGAcmd gave you
+MEGAcmd が表示した URL を入力します。
 
-![ftpConnectToServerMac.png](public/assets/mega-cmd/ftpConnectToServerMac.png?raw=true "ftpConnectToServerMac.png")
+![ftpConnectToServerMac.png](public/assets/mega-cmd/ftpConnectToServerMac.png?raw=true 'ftpConnectToServerMac.png')
 
-At the moment of writing this tutorial, there is no authentication mechanisms, 
-hence you don't need to worry about providing a user name/password. Just proceed if you are prompted with default options.
-You should see the new location in the navigation panel now.
+本ドキュメント執筆時点では認証機構はありませんので、ユーザー名やパスワードの入力は不要です。デフォルトのまま進めてください。
+新しい場所がナビゲーションパネルに表示されるはずです。
 
 ### Linux
 
-This instructions are for Nautilus, it should be similar using another file browser. 
-Notice that `gvfs` currently does not support FTPs
+ここでは Nautilus の例を示しますが、他のファイルブラウザでも同様です。
+なお、`gvfs` は現在 FTPs をサポートしていません。
 
-Click on File -> Connect to Server:
+「ファイル」→「サーバーへ接続」をクリックします。
 
-![webdavMenuLinux.png](public/assets/mega-cmd/webdavMenuLinux.png?raw=true "webdavMenuLinux.png")
+![webdavMenuLinux.png](public/assets/mega-cmd/webdavMenuLinux.png?raw=true 'webdavMenuLinux.png')
 
-Then enter the URL MEGAcmd gave you
+MEGAcmd が表示した URL を入力します。
 
-![ftpConnectToServerLinux.png](public/assets/mega-cmd/ftpConnectToServerLinux.png?raw=true "ftpConnectToServerLinux.png")
+![ftpConnectToServerLinux.png](public/assets/mega-cmd/ftpConnectToServerLinux.png?raw=true 'ftpConnectToServerLinux.png')
 
-You should see the new location in the navigation panel now. 
+新しい場所がナビゲーションパネルに表示されるはずです。

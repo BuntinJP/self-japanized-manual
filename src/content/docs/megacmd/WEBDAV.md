@@ -1,133 +1,155 @@
-# MEGA-WEBDAV - Serve you files as a WEBDAV server with MEGAcmd
-This is a brief tutorial on how to configure [webdav](https://wikipedia.org/wiki/WebDAV) server.
+---
+title: WEBDAV
+description: MEGAcmd を使って WEBDAV サーバーを設定する方法。
+sidebar:
+  order: 4
+---
 
-Configuring a WEBDAV server will let you access your MEGA files as if they were located in your computer.
-All major platforms support access to WEBDAV server. See [`Platform`](#platforms) usage.
+> 翻訳元:https://github.com/meganz/MEGAcmd/blob/master/contrib/docs/WEBDAV.md
 
-Notice: the commands listed here assume you are using the interactive interaction mode: they are supposed to be executed within MEGAcmdShell.
+# MEGA-WEBDAV - MEGAcmd でファイルを WEBDAV サーバーとして提供する
 
-## Serving a folder
-Example: 
+これは [webdav](https://wikipedia.org/wiki/WebDAV) サーバーを設定するための簡単なチュートリアルです。
+
+WEBDAV サーバーを設定することで、MEGA のファイルにまるで自分のコンピュータ上にあるかのようにアクセスできます。  
+主要なプラットフォームはすべて WEBDAV サーバーへのアクセスをサポートしています。[`Platform`](#platforms) の使用法を参照してください。
+
+注意: ここに記載されているコマンドは対話モードでの使用を想定しています。MEGAcmdShell 内で実行してください。
+
+## フォルダを提供する
+
+例:
+
 ```
 webdav /path/mega/folder
 ```
 
-This will configure a WEBDAV server that will serve "myfolder". It'll show you the URL to access that path. You just use that location to configure access [according to your specific OS](#platforms).
-Once you have it configured, you can browse, edit, copy and delete your files as if they were local file in your computer. 
-Caveat: They are not local, MEGAcmd transparently download/upload decrypt/encrypt those files. 
-Hence, throughput will be decreased as compared to accessing to local files. Be patient.
+これにより "myfolder" を提供する WEBDAV サーバーが設定されます。アクセス用の URL が表示されます。  
+その URL を使って、[お使いの OS に応じた設定](#platforms) を行ってください。  
+設定が完了すると、ローカルファイルのようにブラウズ、編集、コピー、削除が可能になります。  
+注意点: それらはローカルのファイルではなく、MEGAcmd が透過的にダウンロード/アップロードや暗号化/復号化を行います。  
+そのため、ローカルファイルに比べてスループットが低下します。気長にお待ちください。
 
-## Streaming
-You can "webdav" a file, so as to offer streaming access to it:
+## ストリーミング
+
+ファイルを "webdav" することで、ストリーミングアクセスを提供できます:
+
 ```
 webdav /path/to/myfile.mp4
 ```
 
-You will receive an URL that you can use in your favourite video player.
+お気に入りの動画プレーヤーで使える URL が返されます。
 
-## Issues
-We have detected some issues with different software, when trying to save a file into a webdav served locations. Typically with software that creates temporary files. 
-We will keep on trying to circumvent those. 
+## 問題点
 
-In Linux, using gvfsd-dav (Gnome's default webdav client), we have occasionally seen problems trying to open text files that have already been modified using some graphic editors.
-This is due to that gvfsd-dav tries to retrieve a URL different to the actual URL of the files. Reading the files through the console works just fine. This has been detected in Ubuntu 16.04.
+一部のソフトウェアで、webdav で提供された場所にファイルを保存しようとすると問題が検出されています。  
+特に一時ファイルを作成するソフトウェアで起こりやすいです。  
+これらの問題を回避できるよう引き続き対応を検討しています。
 
-In Windows XP, copying a file from a MEGA webdav location, and pasting in a local folder does nothing.
+Linux では、gvfsd-dav（Gnome のデフォルトの webdav クライアント）を使う際に、  
+一部のグラフィックエディタで既に編集済みのテキストファイルを開こうとすると問題が発生することがあります。  
+これは gvfsd-dav が実際のファイルの URL とは異なる URL を取得しようとするためです。  
+コンソールからファイルを読む場合は問題ありません。Ubuntu 16.04 で検出されています。
 
-If you find any more issues, don't hesitate to write to support@mega.nz, explaining what the problem is and how to reproduce it.
+Windows XP では、MEGA webdav の場所からファイルをコピーしてローカルフォルダに貼り付けても何も起こりません。
 
-## Listing 
+もし他に問題があれば、support@mega.nz まで問題の内容と再現方法を添えてご連絡ください。
 
-You can list the webdav served locations typing `webdav`:
+## 一覧表示
+
+webdav で提供されている場所は `webdav` と入力すると一覧表示されます:
 
 ```
-WEBDAV SERVED LOCATIONS:                                                        
+WEBDAV SERVED LOCATIONS:
 /path/mega/folder: http://127.0.0.1:4443/XXXXXXX/myfolder
 /path/to/myfile.mp4: http://127.0.0.1:4443/YYYYYYY/myfile.mp4
 ```
 
-These locations will be available as long as MEGAcmd is running. The configuration is persisted, and will be restored everytime you restart MEGAcmd
+これらの場所は MEGAcmd が動作している間利用可能です。設定は永続化され、MEGAcmd を再起動しても復元されます。
 
-# Additional features/configurations
+# 追加機能/設定
 
-## Port & public server
+## ポート & 公開サーバー
 
-When you serve your first location, a WEBDAV server is configured in port `4443`. 
-You can change the port passing `--port=PORT` to your webdav command.
-By default, the server is only accessible from the local machine. 
-You can pass `--public` to your webdav command so as to allow remote access. 
-In that case, use the IP of your server to access to it.
+最初に場所を提供すると、WEBDAV サーバーはデフォルトでポート `4443` に設定されます。  
+`--port=PORT` を webdav コマンドに渡すことでポートを変更できます。  
+デフォルトではサーバーはローカルマシンからのみアクセス可能です。  
+`--public` を webdav コマンドに渡すとリモートアクセスを許可します。  
+その場合はサーバーの IP アドレスを使ってアクセスしてください。
 
 ## HTTPS
 
-Files in MEGA are encrypted, but you should bear in mind that the HTTP webdav server offers your files unencrypted. \
-If you wish to add authenticity to your webdav server and integrity & privacy of the data transfered to/from the clients, 
-you can secure it with [TLS](https://wikipedia.org/wiki/Transport_Layer_Security). 
-You just need to pass `--tls` and the paths* to your certificate and key files (in PEM format):
+MEGA のファイルは暗号化されていますが、HTTP の webdav サーバーはファイルを暗号化せずに提供します。  
+webdav サーバーの認証性やデータ転送の整合性・プライバシーを確保したい場合は、  
+[TLS](https://wikipedia.org/wiki/Transport_Layer_Security) で保護することができます。  
+`--tls` と証明書と鍵ファイル（PEM 形式）のパスを渡してください:
 
 ```
 webdav /path/mega/folder --tls --certificate=/path/to/certificate.pem --key=/path/to/certificate.key
 ```
 
-*Those paths are local paths in your machine, not in MEGA.
+\*これらのパスはローカルマシン上のパスであり、MEGA 内のパスではありません。
 
-Currently, MEGAcmd only supports one server: although you can serve different locations, only one configuration is possible. 
-The configuration used will be the one on your first served location. 
-If you want to change that configuration you will need to stop serving each and every path and start over.
+現状、MEGAcmd は一つのサーバーのみサポートしています。複数の場所を提供しても設定は一つだけです。  
+使用される設定は最初に提供した場所のものになります。  
+設定を変更したい場合は、すべての場所の提供を停止してから再設定してください。
 
+## 提供停止
 
-## Stop serving
+MEGA の場所の提供を停止するには:
 
-You can stop serving a MEGA location with:
 ```
 webdav -d /path/mega/folder
 ```
-If successfully, it will show a message indicating that the path is no longer served:
+
+成功すると、以下のようなメッセージが表示されます:
+
 ```
 /path/mega/folder no longer served via webdav
 ```
 
-## Platforms
+## プラットフォーム
 
-All major platforms support accesing/mounting a webdav location. Here are some instructions to do that in Windows, Linux & Mac.
+主要なプラットフォームはすべて webdav の場所にアクセス/マウントできます。  
+以下に Windows、Linux、Mac での設定方法を示します。
 
 ### Windows
 
-This instructions refer to Windows 10, but they are similar in other windows.
+これは Windows 10 の手順ですが、他の Windows でもほぼ同様です。
 
-Open an Explorer window, and then do right click on "This PC", and then "Map network drive...".
+エクスプローラーを開き、「PC」を右クリックして「ネットワークドライブの割り当て...」を選択します。
 
-![webdavMenuWin.png](public/assets/mega-cmd/webdavMenuWin.png?raw=true "webdavMenuWin.png")
+![webdavMenuWin.png](public/assets/mega-cmd/webdavMenuWin.png?raw=true 'webdavMenuWin.png')
 
-Then enter the URL MEGAcmd gave you
+MEGAcmd が表示した URL を入力します。
 
-![webdavConnectToServerWin.png](public/assets/mega-cmd/webdavConnectToServerWin.png?raw=true "webdavConnectToServerWin.png")
+![webdavConnectToServerWin.png](public/assets/mega-cmd/webdavConnectToServerWin.png?raw=true 'webdavConnectToServerWin.png')
 
-Then, you should see the new location in the navigation panel now.
+ナビゲーションパネルに新しい場所が表示されます。
 
 ### Mac
 
-Open Find and in the Menu "Go", select "Connect to Server", or type **&#x2318; - k**:
+Finder を開き、メニューの「移動」から「サーバへ接続」を選択するか、**⌘ - k** を押します。
 
-![webdavMenuMac.png](public/assets/mega-cmd/webdavMenuMac.png?raw=true "webdavMenuMac.png")
+![webdavMenuMac.png](public/assets/mega-cmd/webdavMenuMac.png?raw=true 'webdavMenuMac.png')
 
-Then enter the URL MEGAcmd gave you
+MEGAcmd が表示した URL を入力します。
 
-![webdavConnectToServerMac.png](public/assets/mega-cmd/webdavConnectToServerMac.png?raw=true "webdavConnectToServerMac.png")
+![webdavConnectToServerMac.png](public/assets/mega-cmd/webdavConnectToServerMac.png?raw=true 'webdavConnectToServerMac.png')
 
-At the moment of writing this tutorial, there is no authentication mechanisms, 
-hence you don't need to worry about providing a user name/password. Just proceed if you are prompted with default options.
-You should see the new location in the navigation panel now.
+執筆時点では認証機構はありません。  
+ユーザー名やパスワードの入力は不要です。デフォルトのまま進めてください。  
+ナビゲーションパネルに新しい場所が表示されます。
 
 ### Linux
 
-This instructions are for Nautilus, it should be similar using another file browser. 
-Click on File -> Connect to Server:
+これは Nautilus の手順です。他のファイルブラウザでも似たような操作です。  
+「ファイル」→「サーバーへ接続」をクリックします。
 
-![webdavMenuLinux.png](public/assets/mega-cmd/webdavMenuLinux.png?raw=true "webdavMenuLinux.png")
+![webdavMenuLinux.png](public/assets/mega-cmd/webdavMenuLinux.png?raw=true 'webdavMenuLinux.png')
 
-Then enter the URL MEGAcmd gave you
+MEGAcmd が表示した URL を入力します。
 
-![webdavConnectToServerLinux.png](public/assets/mega-cmd/webdavConnectToServerLinux.png?raw=true "webdavConnectToServerLinux.png")
+![webdavConnectToServerLinux.png](public/assets/mega-cmd/webdavConnectToServerLinux.png?raw=true 'webdavConnectToServerLinux.png')
 
-You should see the new location in the navigation panel now.
+ナビゲーションパネルに新しい場所が表示されます。

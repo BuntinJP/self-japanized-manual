@@ -1,59 +1,82 @@
-# MEGA-FUSE — Serve your files as a "Filesystem in Userspace" (FUSE) with MEGAcmd
-This is a brief tutorial on how to configure and manage [FUSE](https://en.wikipedia.org/wiki/Filesystem_in_Userspace) with MEGAcmd.
+---
+title: FUSE
+description: MEGAcmd を使って FUSE マウントを設定・管理する方法。
+sidebar:
+  order: 5
+---
 
-Configuring a FUSE mount will let you access your MEGA files as if they were located in your computer. After enabling a FUSE mount, you can use your favourite tools to browse, play, and edit your MEGA files.
+> 翻訳元:https://github.com/meganz/MEGAcmd/blob/master/contrib/docs/FUSE.md
 
-Note: this functionality is in beta, and only supported on Linux.
+# MEGA-FUSE - MEGAcmd で「FUSE」としてファイルを提供する
 
-## Local cache
-MEGAcmd will use a cache to place files while working with mount points. This cache will be used to store both files downloaded from MEGA, and files being uploaded to MEGA. It will be created automatically in `$HOME/.megaCmd/fuse-cache`.
+これは、MEGAcmd で [FUSE](https://ja.wikipedia.org/wiki/Filesystem_in_Userspace) を設定および管理するための簡単なチュートリアルです。
 
-Bear in mind that this cache is fundamental to be able to work with FUSE mounts. Cache files are removed automatically. Restarting the MEGAcmd Server may help reduce the space used by the cache.
+FUSE マウントを設定すると、MEGA のファイルをあたかもコンピュータ内にあるかのようにアクセスできます。FUSE マウントを有効にした後は、お気に入りのツールを使って MEGA ファイルを閲覧、再生、編集できます。
 
-### Important caveats
-Files and folders created locally may not be immediately available in your MEGA cloud: the mount engine will transfer them transparently in the background. Note that the MEGAcmd Server needs to be running in order for these actions to complete.
+注意: この機能はベータ版であり、Linux のみサポートされています。
 
-## Streaming
-Currently, streaming is not directly supported. In order to open files in a FUSE mount point, they need to be downloaded completely to the local cache folder. You will need space in your hard drive to accomodate for these files.
+## ローカルキャッシュ
 
-## Usage
-### Creating a new mount
-You can create a new FUSE mount with:
+MEGAcmd はマウントポイントで作業する際にファイルを置くためのキャッシュを使用します。このキャッシュは、MEGA からダウンロードしたファイルと MEGA にアップロードするファイルの両方を保存するために使われます。`$HOME/.megaCmd/fuse-cache` に自動的に作成されます。
+
+このキャッシュは FUSE マウントで作業するために非常に重要です。キャッシュファイルは自動的に削除されます。キャッシュの使用領域を減らすために MEGAcmd サーバーを再起動すると効果的な場合があります。
+
+### 重要な注意点
+
+ローカルで作成したファイルやフォルダは、即座に MEGA クラウド上で利用可能になるわけではありません。マウントエンジンがバックグラウンドで透過的に転送を行います。これらの処理を完了させるためには、MEGAcmd サーバーが起動している必要があります。
+
+## ストリーミング
+
+現時点ではストリーミングは直接サポートされていません。FUSE マウントポイント内のファイルを開くには、ローカルキャッシュフォルダに完全にダウンロードされている必要があります。これらのファイルを格納するためのハードドライブの空き容量が必要です。
+
+## 使い方
+
+### 新しいマウントの作成
+
+新しい FUSE マウントは以下で作成できます:
+
 ```
 $ fuse-add /local/path/to/fuse/mountpoint /cloud/dir
 ```
 
-After creating the mount, MEGAcmd will try to enable it; if it fails, the mount will remain disabled. See [`fuse-add`](commands/fuse-add.md) for all the possible options and arguments.
+マウントを作成すると、MEGAcmd はそれを有効化しようとします。失敗した場合はマウントは無効のまま残ります。利用可能なすべてのオプションや引数については [`fuse-add`](commands/fuse-add.md) を参照してください。
 
-The mount will have an associated name that we can use to refer to it when managing it. The name must be unique. A custom name can be chosen on creation with the `--name=custom_name` argument. We might also refer to a mount by its local path, but this is not necessarily unique: if multiple mounts share the same local path, we *must* use the name so we can distinguish between them.
+マウントには管理時に参照するための関連付けられた名前が付きます。この名前は一意でなければなりません。作成時に `--name=custom_name` 引数でカスタム名を指定できます。ローカルパスでマウントを参照することもできますが、これは必ずしも一意ではありません。複数のマウントが同じローカルパスを共有する場合は、区別するために名前を使う必要があります。
 
-### Displaying mounts
-The list of existing mounts can be displayed with:
+### マウントの表示
+
+既存のマウント一覧は以下で表示できます:
+
 ```
 $ fuse-show
 NAME LOCAL_PATH                     REMOTE_PATH PERSISTENT ENABLED
 dir /local/path/to/fuse/mountpoint  /cloud/dir  YES        YES
 ```
 
-Use `fuse-show <NAME|LOCAL_PATH>` to get further details on a specific mount. See [`fuse-show`](commands/fuse-show.md) for the list of all possible options and arguments.
+特定のマウントの詳細を表示するには `fuse-show <NAME|LOCAL_PATH>` を使います。利用可能なすべてのオプションや引数については [`fuse-show`](commands/fuse-show.md) を参照してください。
 
-### Enabling/disabling mounts
-To make your cloud files available in your local filesystem, the mount must be enabled. We can do so with:
+### マウントの有効化・無効化
+
+クラウドファイルをローカルファイルシステムで利用可能にするには、マウントを有効化する必要があります。以下で有効化できます:
+
 ```
 $ fuse-enable <NAME|LOCAL_PATH>
 ```
 
-Note: mounts are enabled when created by default (unless `--disabled` is used).
+注意: マウントは作成時にデフォルトで有効化されます（`--disabled` が使われていない限り）。
 
-Similarly, we can stop exposing our cloud files locally with:
+同様に、クラウドファイルのローカル公開を停止するには以下を使います:
+
 ```
 $ fuse-disable <NAME|LOCAL_PATH>
 ```
 
-Note: disabled mounts still exist and are shown in `fuse-show`. See [`fuse-enable`](commands/fuse-enable.md) and [`fuse-disable`](commands/fuse-disable.md) for more information on these commands.
+注意: 無効化されたマウントも存在し、`fuse-show` で表示されます。詳細は [`fuse-enable`](commands/fuse-enable.md) と [`fuse-disable`](commands/fuse-disable.md) を参照してください。
 
-### Adjusting configuration
-As we've mentioned before, the full details of a mount can be displayed with:
+### 設定の調整
+
+前述のように、マウントの詳細は以下で表示できます:
+
 ```
 $ fuse-show dir
 Showing details of mount "dir"
@@ -66,7 +89,8 @@ Showing details of mount "dir"
   Read-only:          NO
 ```
 
-To configure these flags, we can use the [`fuse-config`](commands/fuse-config.md) command. For example, to make the mount read-only, we would do:
+これらのフラグを設定するには [`fuse-config`](commands/fuse-config.md) コマンドを使います。例えばマウントを読み取り専用にするには以下のようにします:
+
 ```
 $ fuse-config --read-only=yes dir
 Mount "dir" now has the following flags
@@ -76,17 +100,22 @@ Mount "dir" now has the following flags
   Read-only:          YES
 ```
 
-### Removing mounts
-A mount can be removed with:
+### マウントの削除
+
+マウントは以下で削除できます:
+
 ```
 $ fuse-remove <NAME|LOCAL_PATH>
 ```
-Note: mounts must be disabled before they can be removed.
 
-## Issues
-Occasionally, you may encounter issues in FUSE mounts that cannot be directly resolved within MEGAcmd (for example, if the MEGAcmd server was closed abruptly). The most common one is: "Error: cannot access '/local/path/to/fuse/mountpoint': Transport endpoint is not connected". To fix them you might need to use the `fusermount` command like so:
+注意: マウントは削除する前に無効化されている必要があります。
+
+## 問題
+
+時折、MEGAcmd 内で直接解決できない FUSE マウントの問題に遭遇することがあります（例えば、MEGAcmd サーバーが突然終了した場合など）。最も一般的な問題は「Error: cannot access '/local/path/to/fuse/mountpoint': Transport endpoint is not connected」です。これを解決するには `fusermount` コマンドを以下のように使う必要があります:
+
 ```
 fusermount -u /local/path/to/fuse/mountpoint
 ```
 
-Adding `-z` may help if the above fails. See the [fusermount man page](https://www.man7.org/linux/man-pages/man1/fusermount3.1.html).
+上記が失敗した場合は `-z` オプションを付けると効果があるかもしれません。詳細は [fusermount マニュアルページ](https://www.man7.org/linux/man-pages/man1/fusermount3.1.html) を参照してください。

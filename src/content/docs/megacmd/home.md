@@ -1,6 +1,6 @@
 ---
-title: mega-cmd HOME
-description: mega-cmdマニュアル
+title: HOME
+description: MEGAcmd self japanized manual home
 sidebar:
   order: 1
 ---
