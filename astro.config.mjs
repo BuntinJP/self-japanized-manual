@@ -28,8 +28,8 @@ export default defineConfig({
           autogenerate: { directory: 'isync' },
         },
         {
-          label: 'Glance',
-          autogenerate: { directory: 'glance' },
+          label: 'Megacmd',
+          autogenerate: { directory: 'megacmd' },
         },
       ],
     }),

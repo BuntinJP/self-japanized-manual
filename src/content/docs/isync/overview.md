@@ -1,6 +1,6 @@
 ---
-title: overview
-description: isync(mbsync)マニュアル概要
+title: isync HOME
+description: isync(mbsync)マニュアル
 sidebar:
   order: 1
 ---
